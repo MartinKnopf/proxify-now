@@ -1,20 +1,14 @@
-#!/bin/sh
+#!/usr/bin/env node
 
-export GLOBAL_AGENT_HTTP_PROXY=$(echo $http_proxy)
-export GLOBAL_AGENT_HTTPS_PROXY=$(echo $https_proxy)
-export GLOBAL_AGENT_NO_PROXY=$(echo $no_proxy)
+var path = require("path");
+var baseDir = path.join(__dirname, "..", "..");
 
-basedir=$(npm bin -g | sed -e 's,\\,/,g')
+var bootstrap = require(path.join(baseDir, "/global-agent")).bootstrap;
 
-case `uname` in
-    *CYGWIN*) basedir=`cygpath -w "$basedir"`;;
-esac
+bootstrap();
 
-if [ -x "$basedir/node" ]; then
-  "$basedir/node" -r "$basedir/node_modules/global-agent/bootstrap" "$basedir/node_modules/now/dist/index.js" "$@"
-  ret=$?
-else 
-  node -r "$basedir/node_modules/global-agent/bootstrap" "$basedir/node_modules/now/dist/index.js" "$@"
-  ret=$?
-fi
-exit $ret
+global.GLOBAL_AGENT.HTTP_PROXY=process.env.http_proxy;
+global.GLOBAL_AGENT.HTTPS_PROXY=process.env.https_proxy;
+global.GLOBAL_AGENT.NO_PROXY=process.env.no_proxy;
+
+require(path.join(baseDir, "/now", "/dist", "/index.js"));
