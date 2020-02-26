@@ -1,8 +1,8 @@
 #!/bin/sh
 
-# npm install -g now global-agent
-# GLOBAL_AGENT_HTTP_PROXY=<PROXY URL>
-# pnow
+export GLOBAL_AGENT_HTTP_PROXY=$(echo $http_proxy)
+export GLOBAL_AGENT_HTTPS_PROXY=$(echo $https_proxy)
+export GLOBAL_AGENT_NO_PROXY=$(echo $no_proxy)
 
 basedir=$(npm bin -g | sed -e 's,\\,/,g')
 
