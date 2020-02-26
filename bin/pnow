@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# npm install -g now global-agent
+# GLOBAL_AGENT_HTTP_PROXY=<PROXY URL>
+# pnow
+
+basedir=$(npm bin -g | sed -e 's,\\,/,g')
+
+case `uname` in
+    *CYGWIN*) basedir=`cygpath -w "$basedir"`;;
+esac
+
+if [ -x "$basedir/node" ]; then
+  "$basedir/node" -r "$basedir/node_modules/global-agent/bootstrap" "$basedir/node_modules/now/dist/index.js" "$@"
+  ret=$?
+else 
+  node -r "$basedir/node_modules/global-agent/bootstrap" "$basedir/node_modules/now/dist/index.js" "$@"
+  ret=$?
+fi
+exit $ret
